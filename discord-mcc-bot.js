@@ -1,9 +1,10 @@
 const Discord=require('discord.js');
 const { spawn } = require('child_process');
 const client=new Discord.Client();
-const mcc=spawn('mono',['../MinecraftClient.exe','test','-','<IP>','BasicIO']);
+const mcc=spawn('mono',['../MinecraftClient.exe','test','-','1.2.3.4','BasicIO']);
 
 ready=false;
+block=false;
 
 client.on('ready',()=>{
 	console.log('ready');
@@ -13,6 +14,16 @@ client.on('ready',()=>{
 mcc.stdout.on('data', (data) => {
 	str=data.toString('utf-8').replace(/§./g,'');
 	console.log('mcc: '+str);
+	if(str.match('^<.*> msgon\n$')){
+		block=false;
+		mcc.stdin.write('bot: msg on\n');
+		return;
+	}
+	if(str.match('^<.*> msgoff\n$')){
+		block=true;
+		mcc.stdin.write('bot: msg off\n');
+		return;
+	}
 	if(!ready){
 		console.log('not ready yet');
 		return;
@@ -22,7 +33,7 @@ mcc.stdout.on('data', (data) => {
 		console.log('#mcc not found');
 		return;
 	}
-	channel.send(str);
+	if(!block)channel.send(str);
 });
 
 client.on('message', message => {
@@ -32,4 +43,4 @@ client.on('message', message => {
 	}
 });
 
-client.login('<TOKEN>');
+client.login();
