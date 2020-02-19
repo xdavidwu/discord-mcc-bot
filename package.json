@@ -1,0 +1,22 @@
+{
+  "name": "discord-mcc-bot",
+  "version": "1.0.0",
+  "description": "discord bot interacting with  Minecraft Console Client",
+  "main": "discord-mcc-bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xdavidwu/discord-mcc-bot.git"
+  },
+  "author": "xdavidwu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xdavidwu/discord-mcc-bot/issues"
+  },
+  "homepage": "https://github.com/xdavidwu/discord-mcc-bot#readme",
+  "dependencies": {
+    "discord.js": "github:discordjs/discord.js"
+  }
+}

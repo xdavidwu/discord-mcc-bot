@@ -1,3 +1,9 @@
+MinecraftClient.exe
+MinecraftClient.ini
+token
+ip
+lang/
+
 # Logs
 logs
 *.log
