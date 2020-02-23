@@ -39,9 +39,12 @@ mcc.stdout.on('data', (data) => {
 });
 
 client.on('message', message => {
-	if (message.content.startsWith('.mcc ')) {
+	if (message.content.startsWith('.mcc /')) {
 		console.log('receive: ' + message.content);
 		mcc.stdin.write(message.content.substring(5) + '\n');
+	}else if (message.content.startsWith('.mcc ')) {
+		console.log('receive chat: ' + message.content);
+		mcc.stdin.write(`@${message.author.username}: ${message.content.substring(5)}\n`);
 	}
 });
 
