@@ -26,6 +26,9 @@ mcc.stdout.on('data', (data) => {
 		mcc.stdin.write('bot: msg off\n');
 		return;
 	}
+	if (str.startsWith('mcc joined the game')) {
+		mcc.stdin.write('/gamemode spectator\n');
+	}
 	if (!ready) {
 		console.log('not ready yet');
 		return;
