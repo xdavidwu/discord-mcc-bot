@@ -43,9 +43,15 @@ mcc.stdout.on('data', (data) => {
 
 client.on('message', message => {
 	if (message.content.startsWith('.mcc /')) {
-		console.log('receive: ' + message.content);
-		mcc.stdin.write(message.content.substring(5) + '\n');
-	}else if (message.content.startsWith('.mcc ')) {
+		if (message.content === '.mcc /list') {
+			// use server /list. MCC /list is confusing and cannot indicate server status
+			console.log('receive /list, override to server /list');
+			mcc.stdin.write("/send /list\n");
+		} else {
+			console.log('receive: ' + message.content);
+			mcc.stdin.write(message.content.substring(5) + '\n');
+		}
+	} else if (message.content.startsWith('.mcc ')) {
 		console.log('receive chat: ' + message.content);
 		mcc.stdin.write(`@${message.author.username}: ${message.content.substring(5)}\n`);
 	}
