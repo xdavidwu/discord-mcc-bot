@@ -5,8 +5,9 @@ const client = new Discord.Client();
 const mcc = spawn('mono', ['MinecraftClient.exe', 'mcc', '-' ,
 		fs.readFileSync('ip', 'utf8').trim(), 'BasicIO']);
 
-ready = false;
-block = false;
+var ready = false;
+var block = false;
+var filters = [];
 
 client.on('ready', () => {
 	console.log('ready');
@@ -16,15 +17,48 @@ client.on('ready', () => {
 mcc.stdout.on('data', (data) => {
 	str = data.toString('utf-8').replace(/§./g, '');
 	console.log('mcc: ' + str);
-	if (str.match('^<.*> msgon\n$')) {
+	if (str.match(/^<.*> msgon\n$/)) {
 		block = false;
 		mcc.stdin.write('bot: msg on\n');
 		return;
 	}
-	if (str.match('^<.*> msgoff\n$')) {
+	if (str.match(/^<.*> msgoff\n$/)) {
 		block = true;
 		mcc.stdin.write('bot: msg off\n');
 		return;
+	}
+	if (str.match(/^<.*> logfilters /)) {
+		let subcmd = str.replace(/^<.*> logfilters /,'').trimEnd();
+		console.log('logfilters ' + subcmd);
+		if (subcmd.match(/^list$/)) {
+			let found = false;
+			for (i in filters) {
+				found = true;
+				mcc.stdin.write(i + ': ' + filters[i] + '\n');
+			}
+			if (!found) {
+				mcc.stdin.write('No filter regexes.\n');
+			}
+		} else if (subcmd.match(/^remove \d+$/)) {
+			let idx = parseInt(subcmd.match(/^remove (\d+)$/)[1], 10);
+			if (idx < filters.length) {
+				filters.splice(idx, 1);
+			} else {
+				mcc.stdin.write('No such index.\n');
+			}
+		} else if (subcmd.match(/^add .*$/)){
+			let exp = subcmd.match(/^add (.*)$/)[1];
+			console.log('add ' + exp);
+			try {
+				new RegExp(exp);
+			} catch(e) {
+				mcc.stdin.write('Invalid regex.\n');
+				return;
+			}
+			filters.push(exp);
+		} else {
+			mcc.stdin.write('Unrecognised subcommand\n');
+		}
 	}
 	if (str.startsWith('mcc joined the game')) {
 		mcc.stdin.write('/gamemode spectator\n');
@@ -38,7 +72,18 @@ mcc.stdout.on('data', (data) => {
 		console.log('#mcc not found');
 		return;
 	}
-	if (!block) channel.send(str);
+	if (!block) {
+		let matched = false;
+		for (i in filters) {
+			if (str.match(filters[i])) {
+				matched = true;
+				break;
+			}
+		}
+		if (!matched) {
+			channel.send(str);
+		}
+	}
 });
 
 client.on('message', message => {
