@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${CI_PROJECT_PATH_SLUG}
+  annotations:
+    app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
+    app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${CI_PROJECT_PATH_SLUG}
+  template:
+    metadata:
+      labels:
+        app: ${CI_PROJECT_PATH_SLUG}
+      annotations:
+        app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
+        app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
+    spec:
+      containers:
+        - name: ${CI_PROJECT_PATH_SLUG}
+          image: ${CI_REGISTRY_IMAGE}:${CI_ENVIRONMENT_SLUG}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: secrets
+              mountPath: /srv/token
+              subPath: token
+            - name: configs
+              mountPath: /srv/ip
+              subPath: ip
+            - name: configs
+              mountPath: /srv/MinecraftClient.ini
+              subPath: mcc-conf
+      volumes:
+        - name: secrets
+          secret:
+            secretName: ${CI_PROJECT_PATH_SLUG}-secrets
+        - name: configs
+          configMap:
+            name: ${CI_PROJECT_PATH_SLUG}-configs
