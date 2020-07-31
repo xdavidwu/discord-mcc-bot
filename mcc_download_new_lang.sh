@@ -10,8 +10,9 @@ LANG_SUF=$(echo $1 | cut -d '_' -f 2 | tr -s '[:lower:]' '[:upper:]')
 
 #https://s3.amazonaws.com/Minecraft.Download/indexes/1.13.json
 #https://launchermeta.mojang.com/v1/packages/280eebe96a3ca45fcbc85800552cea775bc5f73c/1.14.json
+#https://launchermeta.mojang.com/v1/packages/28c11387f2c576240a31d359991bbaed28db57ab/1.15.json
 
-HASH=$(wget https://launchermeta.mojang.com/v1/packages/28c11387f2c576240a31d359991bbaed28db57ab/1.15.json -O - | jq -r ".objects.\"minecraft/lang/$1.json\".hash")
+HASH=$(wget https://launchermeta.mojang.com/v1/packages/cec1b22fb6861ec42edd3a5ca8d0efd0760bfb3b/1.16.json -O - | jq -r ".objects.\"minecraft/lang/$1.json\".hash")
 
 mkdir -p lang
 
