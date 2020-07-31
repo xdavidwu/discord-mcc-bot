@@ -59,8 +59,6 @@ deploy:
   stage: deploy
   image:
     name: alpine:latest
-  variables:
-    GIT_STRATEGY: none
   environment:
     name: production
   before_script:
