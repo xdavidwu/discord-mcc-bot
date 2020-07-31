@@ -33,6 +33,17 @@ build-mcc:
     paths:
       - MinecraftClient.exe
 
+build-lang:
+  stage: build
+  image: alpine:edge
+  before_script:
+    - apk add jq
+  script:
+    - ./mcc_download_new_lang.sh zh_tw
+  artifacts:
+    paths:
+      - lang/zh_TW.lang
+
 package:
   stage: package
   image:
@@ -48,6 +59,8 @@ deploy:
   stage: deploy
   image:
     name: alpine:latest
+  variables:
+    GIT_STRATEGY: none
   environment:
     name: production
   before_script:
@@ -57,5 +70,6 @@ deploy:
   script:
     - ./kubectl -n $KUBE_NAMESPACE create secret generic ${CI_PROJECT_PATH_SLUG}-secrets --from-file=token=$TOKEN --dry-run -o yaml | ./kubectl -n $KUBE_NAMESPACE apply -f -
     - ./kubectl -n $KUBE_NAMESPACE create configmap ${CI_PROJECT_PATH_SLUG}-configs --from-file=ip=$IP --from-file=mcc-conf=$MCC_CONF --dry-run -o yaml | ./kubectl -n $KUBE_NAMESPACE apply -f -
+    - ./kubectl -n $KUBE_NAMESPACE create configmap ${CI_PROJECT_PATH_SLUG}-langs --from-file=zh_TW.lang=lang/zh_TW.lang --dry-run -o yaml | ./kubectl -n $KUBE_NAMESPACE apply -f -
     - envsubst < deployment.yml > out.yml
     - ./kubectl -n $KUBE_NAMESPACE apply -f out.yml

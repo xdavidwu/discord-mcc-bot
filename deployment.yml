@@ -32,6 +32,8 @@ spec:
             - name: configs
               mountPath: /srv/MinecraftClient.ini
               subPath: mcc-conf
+            - name: langs
+              mountPath: /srv/lang
       volumes:
         - name: secrets
           secret:
@@ -39,3 +41,6 @@ spec:
         - name: configs
           configMap:
             name: ${CI_PROJECT_PATH_SLUG}-configs
+        - name: langs
+          configMap:
+            name: ${CI_PROJECT_PATH_SLUG}-langs
