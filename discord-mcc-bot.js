@@ -102,4 +102,9 @@ client.on('message', message => {
 	}
 });
 
+mcc.on('exit', (code, signal) => {
+	console.log('mcc exited with code: ' + code + ' signal:' + signal);
+	process.exit(code);
+});
+
 client.login(fs.readFileSync('token', 'utf8').trim()).catch(console.err);
