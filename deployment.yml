@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app: ${CI_PROJECT_PATH_SLUG}
-        version: ${CI_COMMIT_SHORT_SHA}
+        version: "${CI_COMMIT_SHORT_SHA}"
       annotations:
         app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
         app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
