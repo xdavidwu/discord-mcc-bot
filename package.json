@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/xdavidwu/discord-mcc-bot#readme",
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js"
+    "discord.js": "^12.3.1"
   }
 }
