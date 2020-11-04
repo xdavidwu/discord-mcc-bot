@@ -18,12 +18,12 @@ build:
 
 build-mcc:
   stage: build
-  image: alpine:edge
+  image: registry.eglo.ga/ci-modulize/archlinux-docker-ci/base-devel
   variables:
     GIT_STRATEGY: none
   before_script:
-    - echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
-    - apk add mono git
+    - pacman -Syu --noconfirm
+    - pacmamn -S --noconfirm mono
     - git clone https://github.com/ORelio/Minecraft-Console-Client
   script:
     - cd Minecraft-Console-Client
