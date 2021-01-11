@@ -1,28 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${CI_PROJECT_PATH_SLUG}
-  annotations:
-    app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
-    app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
+  name: discord-mcc-bot
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: ${CI_PROJECT_PATH_SLUG}
   template:
-    metadata:
-      labels:
-        app: ${CI_PROJECT_PATH_SLUG}
-        version: "${CI_COMMIT_SHORT_SHA}"
-      annotations:
-        app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
-        app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
     spec:
       containers:
-        - name: ${CI_PROJECT_PATH_SLUG}
-          image: ${CI_REGISTRY_IMAGE}:${CI_ENVIRONMENT_SLUG}
-          imagePullPolicy: Always
+        - name: discord-mcc-bot
+          image: registry.eglo.ga/none
           volumeMounts:
             - name: secrets
               mountPath: /srv/token
@@ -38,10 +24,10 @@ spec:
       volumes:
         - name: secrets
           secret:
-            secretName: ${CI_PROJECT_PATH_SLUG}-secrets
+            secretName: secrets
         - name: configs
           configMap:
-            name: ${CI_PROJECT_PATH_SLUG}-configs
+            name: configs
         - name: langs
           configMap:
-            name: ${CI_PROJECT_PATH_SLUG}-langs
+            name: langs
