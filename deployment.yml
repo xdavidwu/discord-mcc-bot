@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discord-mcc-bot
+  name: production-discord-mcc-bot
 spec:
   replicas: 1
   template:
